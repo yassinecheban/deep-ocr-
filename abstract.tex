@@ -1,0 +1,72 @@
+\chapter*{Abstract}
+\thispagestyle{empty}
+
+\section*{English Abstract}
+
+This project presents the design, implementation, and deployment of an Optical Character
+Recognition (OCR) system for printed text using deep learning techniques. The system
+employs a Convolutional Recurrent Neural Network (CRNN) architecture combining
+Convolutional Neural Networks (CNN) for spatial feature extraction, Bidirectional
+Long Short-Term Memory (BiLSTM) networks for temporal sequence modeling, and
+Connectionist Temporal Classification (CTC) loss for end-to-end training without
+explicit character alignment.
+
+The dataset comprises 422,400 grayscale character images across 66 classes (digits,
+uppercase and lowercase letters, and punctuation marks), with 6,400 images per class.
+A comprehensive preprocessing pipeline including Otsu binarization, aspect-ratio-preserving
+resizing, and normalization ensures robust input quality.
+
+The trained model is deployed as a Flask web application providing real-time character
+recognition through a user-friendly interface. The system implements automatic character
+segmentation via contour detection for multi-character text recognition.
+
+Key technical contributions include handling legacy HDF5 model formats in modern Keras 3
+environments, implementing efficient data pipelines with tf.data, and deploying a
+production-ready web interface with CORS support.
+
+Evaluation reveals functional character recognition with identified areas for improvement,
+including architecture optimization (switching from sequence models to classification
+for single-character recognition) and data augmentation for enhanced robustness.
+
+\keywordss{Optical Character Recognition, Deep Learning, Convolutional Neural Networks,
+Recurrent Neural Networks, LSTM, CTC Loss, TensorFlow, Keras, Flask, Computer Vision}
+
+\vspace{2cm}
+
+\section*{Résumé en Français}
+
+Ce projet présente la conception, l'implémentation et le déploiement d'un système de
+Reconnaissance Optique de Caractères (OCR) pour texte imprimé utilisant des techniques
+d'apprentissage profond. Le système emploie une architecture de Réseau de Neurones
+Convolutif Récurrent (CRNN) combinant des Réseaux de Neurones Convolutifs (CNN) pour
+l'extraction de caractéristiques spatiales, des réseaux Long Short-Term Memory
+Bidirectionnels (BiLSTM) pour la modélisation de séquences temporelles, et la perte
+Connectionist Temporal Classification (CTC) pour l'entraînement de bout en bout sans
+alignement explicite des caractères.
+
+Le jeu de données comprend 422 400 images de caractères en niveaux de gris réparties
+sur 66 classes (chiffres, lettres majuscules et minuscules, et signes de ponctuation),
+avec 6 400 images par classe. Un pipeline de prétraitement complet incluant la
+binarisation d'Otsu, le redimensionnement préservant le ratio d'aspect et la
+normalisation assure une qualité d'entrée robuste.
+
+Le modèle entraîné est déployé comme application web Flask fournissant une reconnaissance
+de caractères en temps réel via une interface conviviale. Le système implémente une
+segmentation automatique des caractères via détection de contours pour la reconnaissance
+de texte multi-caractères.
+
+Les contributions techniques clés incluent la gestion des formats de modèles HDF5
+hérités dans les environnements Keras 3 modernes, l'implémentation de pipelines de
+données efficaces avec tf.data, et le déploiement d'une interface web prête pour la
+production avec support CORS.
+
+L'évaluation révèle une reconnaissance fonctionnelle des caractères avec des domaines
+d'amélioration identifiés, notamment l'optimisation de l'architecture (passage des
+modèles de séquence à la classification pour la reconnaissance de caractères uniques)
+et l'augmentation de données pour une robustesse accrue.
+
+\keywords{Reconnaissance Optique de Caractères, Apprentissage Profond, Réseaux de
+Neurones Convolutifs, Réseaux de Neurones Récurrents, LSTM, Perte CTC, TensorFlow,
+Keras, Flask, Vision par Ordinateur}
+
+\end{document}

@@ -1,0 +1,60 @@
+\section*{Context and Motivation}
+
+In the digital age, the ability to automatically extract text from images has become
+increasingly important across numerous domains. \gls{ocr} technology enables the conversion
+of printed or handwritten text from images into machine-readable format, facilitating
+document digitization, automated data entry, text search in scanned documents, and
+accessibility features for visually impaired users.
+
+Traditional \gls{ocr} systems relied heavily on hand-crafted features and rule-based
+approaches, requiring extensive domain expertise and manual tuning for different fonts,
+languages, and image conditions. The advent of deep learning has revolutionized this
+field, enabling end-to-end learning systems that automatically discover optimal feature
+representations directly from data.
+
+\section*{Project Objectives}
+
+This project aims to develop a complete \gls{ocr} system for printed character recognition
+using modern deep learning techniques. The specific objectives are:
+
+\begin{enumerate}
+\item Design and implement a robust preprocessing pipeline to handle varied image
+conditions including different lighting, contrast, and noise levels.
+
+\item Build a deep neural network architecture combining convolutional and recurrent
+layers to extract visual features and model sequential dependencies in text.
+
+\item Train the model on a comprehensive dataset of 422,400 character images spanning
+66 classes (digits 0-9, uppercase A-Z, lowercase a-z, and common punctuation marks).
+
+\item Implement \gls{ctc} loss for sequence-to-sequence learning without requiring
+explicit character-level alignment during training.
+
+\item Deploy the trained model as a web application with a user-friendly interface
+for real-time character and text recognition.
+
+\item Evaluate model performance and identify areas for future improvement.
+\end{enumerate}
+
+\section*{Report Structure}
+
+This report is organized as follows:
+
+\textbf{Chapter 1} presents the problem statement, reviews related work in \gls{ocr}
+and deep learning for text recognition, and discusses the theoretical foundations of
+\gls{cnn}, \gls{rnn}, \gls{lstm}, and \gls{ctc} loss.
+
+\textbf{Chapter 2} describes the dataset structure, preprocessing techniques including
+binarization and normalization, and the data loading pipeline implemented for efficient
+training.
+
+\textbf{Chapter 3} details the model architecture, including the \gls{cnn} feature
+extractor, \gls{bilstm} sequence encoder, and \gls{ctc} decoder. Implementation details
+using TensorFlow and Keras are provided.
+
+\textbf{Chapter 4} presents the training procedure, hyperparameter configuration,
+deployment as a Flask web application, and evaluation results with discussion of
+observed behaviors and limitations.
+
+Finally, the \textbf{Conclusion} summarizes the achievements and proposes perspectives
+for future enhancements.

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR Character Recognition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text: #f8fafc;
+            --text-dim: #94a3b8;
+            --accent: #22d3ee;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(34, 211, 238, 0.15) 0%, transparent 40%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            backdrop-filter: blur(12px);
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            color: var(--text-dim);
+            margin-bottom: 20px;
+        }
+
+        .mode-selector {
+            display: flex;
+            background: rgba(15, 23, 42, 0.5);
+            padding: 5px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            gap: 5px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .mode-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .upload-area, .draw-area {
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 40px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            background: rgba(15, 23, 42, 0.3);
+        }
+
+        .draw-area {
+            cursor: crosshair;
+            padding: 0;
+            overflow: hidden;
+            background: white; /* Canvas background should be white for OCR usually */
+            border: 2px solid var(--primary);
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        #image-input {
+            display: none;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 200px;
+        }
+
+        .controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .preview-container {
+            margin-top: 30px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #preview-img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--text-dim);
+            color: var(--text-dim);
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-outline:hover {
+            border-color: #fff;
+            color: #fff;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .result-container {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+        }
+
+        .result-label {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+        }
+
+        .prediction-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-shadow: 0 0 20px rgba(34, 211, 238, 0.3);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .loader {
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            display: none;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>OCR Vision</h1>
+        <p class="subtitle">Draw or upload to recognize text</p>
+
+        <div class="mode-selector">
+            <button class="mode-btn active" id="mode-upload">Upload Image</button>
+            <button class="mode-btn" id="mode-draw">Draw Character</button>
+        </div>
+
+        <!-- Upload Section -->
+        <div id="section-upload">
+            <div class="upload-area" id="drop-zone">
+                <span class="upload-icon">🖼️</span>
+                <p>Drag & Drop or Click to Upload</p>
+                <input type="file" id="image-input" accept="image/*">
+            </div>
+            <div class="preview-container" id="preview-container">
+                <img id="preview-img" src="" alt="Preview">
+                <button class="btn" id="predict-btn-upload">Recognize Upload</button>
+            </div>
+        </div>
+
+        <!-- Draw Section -->
+        <div id="section-draw" style="display: none;">
+            <div class="draw-area">
+                <canvas id="canvas"></canvas>
+            </div>
+            <div class="controls">
+                <button class="btn btn-outline" id="clear-btn">Clear</button>
+                <button class="btn" id="predict-btn-draw">Recognize Drawing</button>
+            </div>
+        </div>
+
+        <div class="loader" id="loader"></div>
+
+        <div class="result-container" id="result-container">
+            <p class="result-label">Recognition Result</p>
+            <div class="prediction-text" id="prediction-text">?</div>
+        </div>
+    </div>
+
+    <script>
+        // Elements
+        const modeUpload = document.getElementById('mode-upload');
+        const modeDraw = document.getElementById('mode-draw');
+        const sectionUpload = document.getElementById('section-upload');
+        const sectionDraw = document.getElementById('section-draw');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const clearBtn = document.getElementById('clear-btn');
+        const predictBtnDraw = document.getElementById('predict-btn-draw');
+        const predictBtnUpload = document.getElementById('predict-btn-upload');
+        const loader = document.getElementById('loader');
+        const resultContainer = document.getElementById('result-container');
+        const predictionText = document.getElementById('prediction-text');
+        
+        const fileInput = document.getElementById('image-input');
+        const dropZone = document.getElementById('drop-zone');
+        const previewContainer = document.getElementById('preview-container');
+        const previewImg = document.getElementById('preview-img');
+
+        // Mode Switching
+        modeUpload.onclick = () => {
+            modeUpload.classList.add('active');
+            modeDraw.classList.remove('active');
+            sectionUpload.style.display = 'block';
+            sectionDraw.style.display = 'none';
+            resultContainer.style.display = 'none';
+        };
+
+        modeDraw.onclick = () => {
+            modeDraw.classList.add('active');
+            modeUpload.classList.remove('active');
+            sectionUpload.style.display = 'none';
+            sectionDraw.style.display = 'block';
+            resultContainer.style.display = 'none';
+            resizeCanvas();
+        };
+
+        // Canvas Logic
+        let isDrawing = false;
+        function resizeCanvas() {
+            const rect = canvas.parentNode.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = 200;
+            clearCanvas();
+        }
+
+        function clearCanvas() {
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        canvas.onmousedown = (e) => { isDrawing = true; draw(e); };
+        canvas.onmousemove = draw;
+        canvas.onmouseup = () => { isDrawing = false; ctx.beginPath(); };
+        canvas.onmouseleave = () => { isDrawing = false; ctx.beginPath(); };
+
+        // Touch support
+        canvas.ontouchstart = (e) => { e.preventDefault(); isDrawing = true; draw(e.touches[0]); };
+        canvas.ontouchmove = (e) => { e.preventDefault(); draw(e.touches[0]); };
+        canvas.ontouchend = () => { isDrawing = false; ctx.beginPath(); };
+
+        function draw(e) {
+            if (!isDrawing) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.pageX) - rect.left;
+            const y = (e.clientY || e.pageY) - rect.top;
+
+            ctx.lineWidth = 10;
+            ctx.lineCap = "round";
+            ctx.strokeStyle = "black";
+
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        clearBtn.onclick = clearCanvas;
+
+        // Upload Logic
+        dropZone.onclick = () => fileInput.click();
+        fileInput.onchange = (e) => { if (e.target.files.length) handleFile(e.target.files[0]); };
+
+        function handleFile(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImg.src = e.target.result;
+                previewContainer.style.display = 'flex';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Prediction Logic
+        // Automatically detect the API URL based on current host
+        const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:5000'  // Local development
+            : `http://${window.location.hostname}:5000`;  // Network access
+        
+        console.log('API URL:', API_URL);  // Debug log
+        console.log('Current hostname:', window.location.hostname);
+        
+        async function sendPrediction(blob) {
+            loader.style.display = 'block';
+            resultContainer.style.display = 'none';
+            
+            const formData = new FormData();
+            formData.append('image', blob, 'drawing.png');
+
+            try {
+                console.log('Sending request to:', `${API_URL}/predict`);
+                const response = await fetch(`${API_URL}/predict`, { 
+                    method: 'POST', 
+                    body: formData 
+                });
+                
+                console.log('Response status:', response.status);
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                if (data.status === 'success') {
+                    predictionText.textContent = data.prediction || 'No text detected';
+                    resultContainer.style.display = 'block';
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (err) {
+                console.error('Fetch error:', err);
+                alert('Connection error: ' + err.message);
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+
+        predictBtnDraw.onclick = () => {
+            canvas.toBlob(sendPrediction);
+        };
+
+        predictBtnUpload.onclick = () => {
+            if (fileInput.files.length) sendPrediction(fileInput.files[0]);
+        };
+    </script>
+</body>
+</html>
+</body>
+</html>

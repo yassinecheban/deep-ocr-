@@ -1,0 +1,346 @@
+%% @Author: Ahmad Ben Taleb
+%  @Date:   2026
+%% @Class:  PFE ITBS V3.
+
+\documentclass[a4paper, oneside, 12pt, final]{extreport}
+\usepackage{graphicx}
+\usepackage{float}
+\parindent 0cm
+\usepackage{makeidx}
+\usepackage{tcolorbox}
+\makeindex
+\usepackage[lined,boxed,commentsnumbered, english, ruled,vlined,linesnumbered]{algorithm2e}
+\usepackage{amsthm}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{exemple}{Example}[chapter]
+\usepackage[nottoc]{tocbibind}
+\providecommand{\keywords}[1]{\textbf{\textit{Mots clés---}} #1}
+\providecommand{\keywordss}[1]{\textbf{\textit{Keywords---}} #1}
+\usepackage{etoolbox}
+\textwidth 18cm
+\textheight 24cm
+\topmargin -0.5cm
+\oddsidemargin -1cm
+
+\usepackage{ifxetex}
+\ifxetex
+\usepackage{fontspec}
+\else
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\fi
+
+% ──────────────────────────────────────────────────────────
+%  PAGE DE GARDE
+% ──────────────────────────────────────────────────────────
+\newcommand{\reportTitle}{%
+\textsc{Optical Character Recognition: Deep Learning Approach for Printed Text}}
+
+\newcommand{\reportAuthor}{%
+Chebâane  \textsc{Mohamed Yassine} \\
+Mbarek \textsc{Issam idin}%
+}
+
+\newcommand{\reportSubject}{}
+
+\newcommand{\studyDepartment}{%
+Entreprise d'accueil}
+
+\newcommand{\ITBS}{%
+\\ Ecole Supérieure Privée des Technologies de l'Information et de Management de Nabeul}
+
+\newcommand{\AU}{\centering \textbf{Année Universitaire 2024-2025}}
+
+\newcommand{\specialcell}[1]{%
+\begin{tabularx}{\textwidth}{@{}X@{}}#1\end{tabularx}%
+}
+
+\newcommand{\MyCommand}{Does nothing really}
+
+\title{\reportSubject}
+\author{\reportAuthor}
+
+\usepackage{graphics}
+\usepackage{graphicx}
+\usepackage[acronym,toc,section=chapter]{glossaries}
+\makeglossaries
+
+\newacronym{ocr}{OCR}{Optical Character Recognition}
+\newacronym{cnn}{CNN}{Convolutional Neural Network}
+\newacronym{rnn}{RNN}{Recurrent Neural Network}
+\newacronym{lstm}{LSTM}{Long Short-Term Memory}
+\newacronym{ctc}{CTC}{Connectionist Temporal Classification}
+\newacronym{crnn}{CRNN}{Convolutional Recurrent Neural Network}
+\newacronym{bilstm}{BiLSTM}{Bidirectional Long Short-Term Memory}
+\newacronym{svm}{SVM}{Support Vector Machines}
+\newacronym{hdf5}{HDF5}{Hierarchical Data Format version 5}
+\newacronym{api}{API}{Application Programming Interface}
+
+\pagenumbering{roman}
+\usepackage[utf8]{inputenc}
+
+\begin{document}
+
+\thispagestyle{empty}
+
+\begin{titlepage}
+\begin{center}
+
+%% ── HEADER ──────────────────────────────────
+\includegraphics[scale=0.20]{embleme.jpg}
+\vspace{0.5cm}
+{%
+\fontsize{9pt}{9pt}\selectfont%
+\begin{tabular}{c}
+R\'epublique Tunisienne \\
+Minist\`ere de l'Enseignement Supérieur et de la Recherche Scientifique   
+\ITBS{}
+\\ 
+\end{tabular}
+}
+
+\vspace{1cm}
+\includegraphics[scale=0.1]{logonoir.png}
+
+%% ── CONTENT ────────────────────────────────────────────
+\vspace{10pt}
+\vspace{5pt}
+\vspace{15pt}
+{\textit{Mini projet Deep Learning}}\\
+\vspace{10pt}
+{\textbf{\large Diplôme National d'Ingénieur en Génie Informatique \\ Génie logiciel}}\\
+\vspace{5pt}
+
+\textbf{\textit{Réalisé par}}\\
+\vspace{10pt}
+{%
+\fontsize{14pt}{14pt}\selectfont%
+{\bfseries\Large\sc \reportAuthor}\\
+}%
+
+\vspace{5pt}
+{%
+\fontsize{27pt}{27pt}\selectfont%
+\rule{0.5\textwidth}{.4pt}\\
+\vspace{10pt}
+\reportSubject{Optical Character Recognition (OCR):\\
+A Deep Learning Approach for Printed Text Recognition}\\
+%
+\vspace{10pt}
+\rule{0.5\textwidth}{.4pt}
+}
+
+\vspace{5pt}
+\vspace{10pt}
+
+\begin{table}[h]
+\begin{tabular}{lcr}
+\textbf{Encadrant Académique:} M Ben Taleb Ahmed      & 
+\end{tabular}
+\end{table}
+
+\vspace{10pt}
+\textbf{\textit{}}\\
+\vspace{5pt}
+\studyDepartment
+
+\centering
+\includegraphics[scale=0.08]{logonoir.png}
+
+\end{center}
+\vspace{20pt}
+\AU\\
+
+\end{titlepage}
+
+% ──────────────────────────────────────────────────────────
+%  DÉDICACE
+% ──────────────────────────────────────────────────────────
+\chapter*{Dedication}
+\thispagestyle{empty}
+
+\begin{center}
+{\it
+We dedicate this work to our families, for their unconditional support, encouragement,
+and patience throughout our studies. Their guidance and trust have been a constant
+source of motivation.
+
+We also dedicate this project to our friends, who have always been there to inspire us,
+share their ideas, and encourage us along the way\ldots
+}
+\end{center}
+
+% ──────────────────────────────────────────────────────────
+%  REMERCIEMENTS
+% ──────────────────────────────────────────────────────────
+\chapter*{Acknowledgment}
+\thispagestyle{empty}
+
+We would like to express our sincere gratitude to all those who have supported us
+throughout this project.
+
+First and foremost, we would like to thank our academic supervisor, Mr.\ Ben Taleb Ahmed,
+for his guidance, valuable advice, and continuous encouragement. His expertise and
+patience have been instrumental in the successful completion of this work.
+
+We are also grateful to our colleagues and friends who offered their support, shared ideas,
+and provided constructive feedback during the development of this project.
+
+Finally, we wish to thank our families for their unwavering support, understanding, and
+encouragement throughout our studies. Their trust and motivation have been a constant
+source of strength.
+
+This work would not have been possible without all of their contributions.
+
+% ──────────────────────────────────────────────────────────
+%  TABLE DES MATIÈRES
+% ──────────────────────────────────────────────────────────
+\addtocontents{toc}{\protect\setcounter{tocdepth}{4}}
+\tableofcontents
+\listoffigures
+\listoftables
+\printglossaries
+
+\cleardoublepage
+\newpage
+\pagenumbering{arabic}
+
+% ──────────────────────────────────────────────────────────
+%  INTRODUCTION GÉNÉRALE
+% ──────────────────────────────────────────────────────────
+\chapter*{Introduction}
+\label{chap:general_introduction}
+\addcontentsline{toc}{chapter}{Introduction}
+\input{introduction.tex}
+
+% ──────────────────────────────────────────────────────────
+%  CHAPITRES
+% ──────────────────────────────────────────────────────────
+\chapter{Introduction and Problem Statement}
+\label{chap:chapterone}
+\input{chapitre1.tex}
+
+\chapter{Dataset and Preprocessing}
+\label{chap:2}
+\input{chapitre2.tex}
+
+\chapter{Model Architecture and Implementation}
+\label{chap:3}
+\input{chapitre3.tex}
+
+\chapter{Training, Deployment and Results}
+\label{chap:4}
+\input{chapitre4.tex}
+
+% ──────────────────────────────────────────────────────────
+%  CONCLUSION
+% ──────────────────────────────────────────────────────────
+\chapter*{Conclusion and Perspectives}
+\label{chap:conclusion}
+\addcontentsline{toc}{chapter}{Conclusion and Perspectives}
+\markboth{\MakeUppercase{Conclusion and Perspectives}}{}
+
+This project successfully developed an end-to-end \gls{ocr} system capable of recognizing
+printed characters from images. We implemented a complete deep learning pipeline covering
+data loading, preprocessing, model architecture design, training, and deployment as a
+web application.
+
+The proposed architecture — a \gls{crnn} combining a \gls{cnn} feature extractor with
+stacked \gls{bilstm} layers and \gls{ctc} loss — demonstrated effectiveness for character
+recognition tasks. Our dataset of 422,400 images across 66 character classes (digits,
+uppercase, lowercase, and punctuation) provided sufficient training data for robust
+character-level recognition.
+
+The preprocessing pipeline, including Otsu binarization, aspect-ratio-preserving resizing,
+and normalization, ensured consistent input quality. The Flask-based web interface with
+real-time prediction capabilities demonstrates the practical applicability of the system.
+
+Key technical achievements include:
+\begin{itemize}
+\item Successfully handling legacy \gls{hdf5} model weights in modern Keras 3 environment
+\item Implementing automatic character segmentation via contour detection
+\item Deploying a responsive web interface for real-time OCR predictions
+\item Achieving functional character recognition with the trained model
+\end{itemize}
+
+\section*{Perspectives}
+
+Future improvements that can enhance the system:
+
+\begin{itemize}
+\item \textbf{Architecture optimization:} Consider switching to a classification-based
+approach for single-character recognition, which may provide better accuracy and faster
+inference than sequence-based \gls{ctc} models for this specific use case.
+
+\item \textbf{Data augmentation:} Expand training robustness through synthetic augmentation
+including rotation, noise injection, perspective transforms, and elastic distortions to
+better handle real-world image variations.
+
+\item \textbf{Advanced decoding:} Integrate language model-based beam search decoding
+to leverage contextual information and correct recognition errors in word-level predictions.
+
+\item \textbf{Multi-line support:} Extend the system to handle full document pages by
+integrating text detection models (CRAFT, DB-Net, or EAST) before the recognition stage.
+
+\item \textbf{Model optimization:} Explore lightweight architectures for mobile deployment,
+including MobileNet-based feature extractors or knowledge distillation techniques.
+
+\item \textbf{Transformer architectures:} Investigate attention-based models such as
+TrOCR or Vision Transformers for potentially improved recognition accuracy.
+
+\item \textbf{Production deployment:} Implement model serving with TensorFlow Serving
+or ONNX Runtime for scalable production deployment with proper monitoring and logging.
+\end{itemize}
+
+These perspectives open pathways for future work and the potential deployment of a
+fully operational \gls{ocr} solution in real-world document digitization pipelines.
+
+% ──────────────────────────────────────────────────────────
+%  RÉFÉRENCES
+% ──────────────────────────────────────────────────────────
+\chapter*{References}
+\addcontentsline{toc}{chapter}{References}
+
+\begin{itemize}
+\item Graves, A., Fernández, S., Gomez, F., \& Schmidhuber, J. (2006).
+``Connectionist Temporal Classification: Labelling Unsegmented Sequence Data
+with Recurrent Neural Networks.'' \textit{ICML 2006}.
+
+\item Shi, B., Bai, X., \& Yao, C. (2016).
+``An End-to-End Trainable Neural Network for Image-based Sequence Recognition
+and Its Application to Scene Text Recognition.''
+\textit{IEEE TPAMI}, 39(11), 2298--2304.
+
+\item Abadi, M., et al.\ (2015).
+\textit{TensorFlow: Large-Scale Machine Learning on Heterogeneous Systems}.
+Software available from \texttt{tensorflow.org}.
+
+\item Chollet, F., et al.\ (2015).
+\textit{Keras}. Software available from \texttt{keras.io}.
+
+\item Bradski, G. (2000).
+``The OpenCV Library.'' \textit{Dr.\ Dobb's Journal of Software Tools}.
+
+\item Otsu, N. (1979).
+``A Threshold Selection Method from Gray-Level Histograms.''
+\textit{IEEE Transactions on Systems, Man, and Cybernetics}, 9(1), 62--66.
+
+\item LeCun, Y., Bengio, Y., \& Hinton, G. (2015).
+``Deep Learning.'' \textit{Nature}, 521, 436--444.
+
+\item Hochreiter, S., \& Schmidhuber, J. (1997).
+``Long Short-Term Memory.'' \textit{Neural Computation}, 9(8), 1735--1780.
+
+\item Pedregosa, F., et al.\ (2011).
+``Scikit-learn: Machine Learning in Python.''
+\textit{Journal of Machine Learning Research}, 12, 2825--2830.
+\end{itemize}
+
+\cleardoublepage
+\printindex
+
+\input{abstract}
+
+\end{document}

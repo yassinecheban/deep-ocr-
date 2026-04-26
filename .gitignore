@@ -1,0 +1,88 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+venv_old/
+env/
+ENV/
+
+# Dataset (too large for Git)
+DATASET/
+train_val_images/
+archive.zip
+
+# Training artifacts and logs
+logs/
+scratch/
+*.ipynb_checkpoints/
+
+# Model checkpoints (keep only the one needed for deployment)
+# Keep: checkpoints/ocr_predict.keras
+checkpoints/ocr_best.keras
+best_ocr_model.h5
+ocr_inference_model.h5
+
+# Large data files
+*.csv
+*.parquet
+*.zip
+TextOCR_0.1_train.json
+
+# Test images (keep a few small ones if needed)
+test.jpg
+quote.jpg
+Untitled.png
+Untitled(1).png
+
+# Executables
+*.exe
+
+# LaTeX auxiliary files
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.idx
+*.ilg
+*.ind
+*.glo
+*.gls
+*.glg
+*.acn
+*.acr
+*.alg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Docker
+.dockerignore
+.dockerignore.backend
+
+# Temporary files
+*.tmp
+*.bak
