@@ -34,7 +34,7 @@ spec:
       containers:
       # ─── 1. Conteneur Principal (API Flask) ─────────────────────────
       - name: ocr-app
-        image: gcr.io/text-rec-495115/ocr-app:v1
+        image: us-central1-docker.pkg.dev/text-rec-495115/ocr-repo/ocr-app:v1
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
