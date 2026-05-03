@@ -29,7 +29,7 @@ RUN pip install --no-cache-dir \
 COPY app.py .
 COPY ocr_config.py .
 COPY templates/ ./templates/
-COPY checkpoints/ocr_best.keras ./checkpoints/ocr_best.keras
+COPY checkpoints/ocr_predict.keras ./checkpoints/ocr_predict.keras
 
 # Copy tests (if you have them)
 # COPY tests/ ./tests/
