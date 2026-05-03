@@ -1,0 +1,25 @@
+# ══════════════════════════════════════════════════════════════════════
+# Kubernetes Service - OCR Application
+# Type: LoadBalancer (exposes app to internet with external IP)
+# ══════════════════════════════════════════════════════════════════════
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ocr-app-service
+  namespace: production
+  labels:
+    app: ocr-app
+spec:
+  type: LoadBalancer
+  selector:
+    app: ocr-app
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 8080
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800

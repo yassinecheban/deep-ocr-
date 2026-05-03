@@ -1,0 +1,43 @@
+# ══════════════════════════════════════════════════════════════════════
+# Dockerfile.test - Testing Environment
+# Features: Test dependencies, pytest, unittest, mocks
+# ══════════════════════════════════════════════════════════════════════
+
+FROM python:3.11-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libglib2.0-0 \
+    libgl1 \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Install testing frameworks
+RUN pip install --no-cache-dir \
+    pytest \
+    pytest-cov \
+    pytest-mock \
+    unittest-xml-reporting \
+    coverage
+
+# Copy application code
+COPY app.py .
+COPY ocr_config.py .
+COPY templates/ ./templates/
+COPY checkpoints/ocr_best.keras ./checkpoints/ocr_best.keras
+
+# Copy tests (if you have them)
+# COPY tests/ ./tests/
+
+ENV PYTHONUNBUFFERED=1
+ENV PORT=8080
+
+EXPOSE 8080
+
+# Run tests by default
+CMD ["pytest", "-v", "--cov=.", "--cov-report=html", "--cov-report=term"]

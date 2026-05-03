@@ -1,0 +1,18 @@
+# ══════════════════════════════════════════════════════════════════════
+# Kubernetes PersistentVolumeClaim - OCR Application
+# Objectif : Allouer du stockage (GCP Persistent Disk) pour le projet
+# ══════════════════════════════════════════════════════════════════════
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ocr-storage-pvc
+  namespace: production
+  labels:
+    app: ocr-app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

@@ -1,0 +1,46 @@
+# ══════════════════════════════════════════════════════════════════════
+# Dockerfile.dev - Development Environment
+# Features: Full dependencies, debug mode, auto-reload, detailed logs
+# ══════════════════════════════════════════════════════════════════════
+
+FROM python:3.11-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libglib2.0-0 \
+    libgl1 \
+    curl \
+    vim \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Install development tools
+RUN pip install --no-cache-dir \
+    flask-debugtoolbar \
+    ipython \
+    pytest \
+    black \
+    flake8
+
+# Copy application code
+COPY app.py .
+COPY ocr_config.py .
+COPY templates/ ./templates/
+COPY checkpoints/ocr_best.keras ./checkpoints/ocr_best.keras
+
+# Environment variables for development
+ENV FLASK_ENV=development
+ENV FLASK_DEBUG=1
+ENV PORT=8080
+ENV PYTHONUNBUFFERED=1
+ENV LOG_LEVEL=DEBUG
+
+EXPOSE 8080
+
+# Run with Flask development server (auto-reload enabled)
+CMD ["python", "-m", "flask", "run", "--host=0.0.0.0", "--port=8080", "--reload"]

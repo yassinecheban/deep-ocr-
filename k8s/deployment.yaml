@@ -1,0 +1,91 @@
+# ══════════════════════════════════════════════════════════════════════
+# Kubernetes Deployment - OCR Application
+# Strategy: RollingUpdate for zero-downtime deployments
+# ══════════════════════════════════════════════════════════════════════
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ocr-app-deployment
+  namespace: production
+  labels:
+    app: ocr-app
+    environment: production
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: ocr-app
+  template:
+    metadata:
+      labels:
+        app: ocr-app
+        environment: production
+    spec:
+      volumes:
+      - name: ocr-storage
+        persistentVolumeClaim:
+          claimName: ocr-storage-pvc
+      containers:
+      # ─── 1. Conteneur Principal (API Flask) ─────────────────────────
+      - name: ocr-app
+        image: gcr.io/text-rec-495115/ocr-app:v1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+        volumeMounts:
+        - name: ocr-storage
+          mountPath: /app/data
+        env:
+        - name: PORT
+          value: "8080"
+        - name: LOG_LEVEL
+          value: "INFO"
+        - name: WORKERS
+          value: "1"
+        - name: THREADS
+          value: "2"
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 15
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 45
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+      
+      # ─── 2. Conteneur Sidecar (Monitoring / Prometheus) ───────────────
+      - name: node-exporter
+        image: prom/node-exporter:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9100
+          name: metrics
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "250m"
